@@ -2,6 +2,7 @@ package arcade
 
 import (
 	"fmt"
+
 	"github.com/gogogomoku/gomoku_v2/board"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )

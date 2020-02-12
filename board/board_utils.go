@@ -40,10 +40,10 @@ func (b *Board) GetNextPosition(position Position, direction int8) Position {
 	return Position{}
 }
 
-func int8IntoInt32(i1 int8, i2 int8, i3 int8, i4 int8) int32 {
-	i := int32(i1) << 24
-	i += int32(i2) << 16
-	i += int32(i3) << 8
-	i += int32(i4)
+func int8IntoInt32(i1 int8, i2 int8, i3 int8, i4 int8) int8 {
+	i := int8(i1) << 6
+	i += int8(i2) << 4
+	i += int8(i3) << 2
+	i += int8(i4)
 	return i
 }

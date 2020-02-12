@@ -2,6 +2,7 @@ package board
 
 import (
 	"fmt"
+
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
