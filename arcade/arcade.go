@@ -3,14 +3,14 @@ package arcade
 import (
 	"fmt"
 	"github.com/gogogomoku/gomoku_v2/board"
-	"github.com/gogogomoku/gomoku_v2/player"
+	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
 type Match struct {
 	Board   *board.Board
 	Id      int
-	P1      *player.Player
-	P2      *player.Player
+	P1      *pl.Player
+	P2      *pl.Player
 	History []*Move
 }
 
@@ -21,7 +21,7 @@ type Arcade struct {
 }
 
 type Move struct {
-	Player   *player.Player
+	Player   *pl.Player
 	Position *board.Position
 }
 
@@ -35,8 +35,8 @@ var CurrentMatches = Arcade{
 func NewMatch() *Match {
 	CurrentMatches.Counter++
 	gameId := CurrentMatches.Counter
-	p1 := player.Player{Id: 1, Opponent: nil, Captured: 0}
-	p2 := player.Player{Id: 2, Opponent: &p1, Captured: 0}
+	p1 := pl.Player{Id: 1, Opponent: nil, Captured: 0}
+	p2 := pl.Player{Id: 2, Opponent: &p1, Captured: 0}
 	p1.Opponent = &p2
 	match := Match{
 		Board: board.NewBoard(gameId),
@@ -49,7 +49,7 @@ func NewMatch() *Match {
 	return &match
 }
 
-func (match *Match) AddMove(player *player.Player, position *board.Position) {
+func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	match.Board.PlaceStone(player, position)
 	match.History = append(match.History, &Move{player, position})
 }

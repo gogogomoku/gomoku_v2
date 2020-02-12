@@ -2,8 +2,7 @@ package board
 
 import (
 	"fmt"
-	"github.com/gogogomoku/gomoku_v2/player"
-	"reflect"
+	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
 const SIZE = 19
@@ -34,8 +33,8 @@ func NewBoard(gameId int) *Board {
 	return &b
 }
 
-// Positions a stone in the board
-func (b *Board) PlaceStone(player *player.Player, position *Position) {
+// Places a stone in the board
+func (b *Board) PlaceStone(player *pl.Player, position *Position) {
 	fmt.Printf("MOVE    (game %03d): player %d places at %x\n", b.GameId, player.Id, position)
 	b.Tab[position.Y][position.X] = player.Id
 	canCapture, toCapture := b.CheckCaptures(player, position)
@@ -46,74 +45,37 @@ func (b *Board) PlaceStone(player *player.Player, position *Position) {
 
 // Check if by placing a stone, playerId can capture
 // returns bool to true if can capturem and a slice of capturable positions
-func (b *Board) CheckCaptures(player *player.Player, position *Position) (canCapture bool, toCapture *[]Position) {
+func (b *Board) CheckCaptures(player *pl.Player, position *Position) (captures bool, list *[]Position) {
+	// Store valid pattern for capture in 32 bits
+	capturingPattern := int8IntoInt32(player.Id, player.Opponent.Id, player.Opponent.Id, player.Id)
 	posToCapture := []Position{}
-	pattern := [4]int8{player.Id, player.Opponent.Id, player.Opponent.Id, player.Id}
 	for direction := int8(0); direction < 8; direction++ {
-
 		// Build a sequence of positions to check capture
-		tmpPosition := *position
-		sequence := []Position{*position}
-		for i := 0; i < 3; i++ {
-			tmpPosition = b.GetNextPositionForDirection(tmpPosition, direction)
-			if tmpPosition.X < 0 || tmpPosition.X > SIZE-1 {
-				continue
-			}
-			if tmpPosition.Y < 0 || tmpPosition.Y > SIZE-1 {
-				continue
-			}
-			sequence = append(sequence, tmpPosition)
-		}
+		sequence := b.GetNPositionsSequence(position, direction, 4)
 		if len(sequence) != 4 {
 			continue
 		}
-
-		// Build a sequence of values from positions to check capture
-		foundSequence := [4]int8{}
-		for i := 0; i < 4; i++ {
-			foundSequence[i] = b.GetPosition(sequence[i])
-		}
-
-		if reflect.DeepEqual(pattern, foundSequence) {
-			canCapture = true
+		// store found sequence in 32 bits and compare
+		foundPattern := int8IntoInt32(
+			b.GetPositionValue(sequence[0]),
+			b.GetPositionValue(sequence[1]),
+			b.GetPositionValue(sequence[2]),
+			b.GetPositionValue(sequence[3]),
+		)
+		if foundPattern == capturingPattern {
+			captures = true
 			posToCapture = append(posToCapture, sequence[1])
 			posToCapture = append(posToCapture, sequence[2])
 		}
 	}
-	return canCapture, &posToCapture
+	return captures, &posToCapture
 }
 
 // Capture surrounding opponent stones for a playerId stone
-func (b *Board) Capture(player *player.Player, toCapture *[]Position) {
+func (b *Board) Capture(player *pl.Player, toCapture *[]Position) {
 	player.Captured += int8(len(*toCapture))
 	for _, position := range *toCapture {
 		b.Tab[position.Y][position.X] = 0
 		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.GameId, player.Id, position)
 	}
-}
-
-func (b *Board) GetNextPositionForDirection(position Position, direction int8) Position {
-	switch direction {
-	case NW:
-		return Position{position.X - 1, position.Y - 1}
-	case N:
-		return Position{position.X, position.Y - 1}
-	case NE:
-		return Position{position.X + 1, position.Y - 1}
-	case W:
-		return Position{position.X - 1, position.Y}
-	case E:
-		return Position{position.X + 1, position.Y}
-	case SW:
-		return Position{position.X - 1, position.Y + 1}
-	case S:
-		return Position{position.X, position.Y + 1}
-	case SE:
-		return Position{position.X + 1, position.Y + 1}
-	}
-	return Position{}
-}
-
-func (b *Board) GetPosition(position Position) int8 {
-	return b.Tab[position.Y][position.X]
 }
