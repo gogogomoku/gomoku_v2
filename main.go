@@ -2,11 +2,34 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/gogogomoku/gomoku_v2/arcade"
 	"github.com/gogogomoku/gomoku_v2/board"
+	"github.com/gogogomoku/gomoku_v2/server"
+
+	"github.com/akamensky/argparse"
 )
 
 func main() {
+	parser := argparse.NewParser(
+		"Gomoku",
+		"Gomoku game server, for multiplayer and smart AI",
+	)
+	s := parser.Flag("s", "server",
+		&argparse.Options{Help: "Run in server mode"})
+	err := parser.Parse(os.Args)
+	if err != nil {
+		fmt.Print(parser.Usage(err))
+	}
+	if *s {
+		server.StartServer()
+	} else {
+		StartLocalGomoku()
+	}
+}
+
+func StartLocalGomoku() {
 	fmt.Println("This multi-gomoku game thing is on!")
 	game1 := arcade.NewMatch()
 	game2 := arcade.NewMatch()
