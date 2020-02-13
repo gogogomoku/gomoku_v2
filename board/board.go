@@ -20,8 +20,8 @@ const (
 )
 
 type Board struct {
-	Tab    [SIZE][SIZE]int8
-	GameId int
+	Tab    [SIZE][SIZE]int8 `json:"tab"`
+	GameId int              `json:"gameId"`
 }
 
 type Position struct {
@@ -48,7 +48,7 @@ func (b *Board) PlaceStone(player *pl.Player, position *Position) {
 // returns bool to true if can capturem and a slice of capturable positions
 func (b *Board) CheckCaptures(player *pl.Player, position *Position) (captures bool, list *[]Position) {
 	// Store valid pattern for capture in 32 bits
-	capturingPattern := int8IntoInt32(player.Id, player.Opponent.Id, player.Opponent.Id, player.Id)
+	capturingPattern := int8IntoInt32(player.Id, player.OpponentId, player.OpponentId, player.Id)
 	posToCapture := []Position{}
 	for direction := int8(0); direction < 8; direction++ {
 		// Build a sequence of positions to check capture

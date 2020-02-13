@@ -8,11 +8,11 @@ import (
 )
 
 type Match struct {
-	Board   *board.Board
-	Id      int
-	P1      *pl.Player
-	P2      *pl.Player
-	History []*Move
+	Id      int          `json:"id"`
+	P1      *pl.Player   `json:"p1"`
+	P2      *pl.Player   `json:"p2"`
+	Board   *board.Board `json:"board"`
+	History []*Move      `json:"history"`
 }
 
 // A struct containing several simoultaneous matches
@@ -22,8 +22,8 @@ type Arcade struct {
 }
 
 type Move struct {
-	Player   *pl.Player
-	Position *board.Position
+	Player   *pl.Player      `json:"player"`
+	Position *board.Position `json:"position"`
 }
 
 // Global object containing a reference to simoultaneous matches
@@ -36,9 +36,8 @@ var CurrentMatches = Arcade{
 func NewMatch() *Match {
 	CurrentMatches.Counter++
 	gameId := CurrentMatches.Counter
-	p1 := pl.Player{Id: 1, Opponent: nil, Captured: 0}
-	p2 := pl.Player{Id: 2, Opponent: &p1, Captured: 0}
-	p1.Opponent = &p2
+	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0}
+	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0}
 	match := Match{
 		Board: board.NewBoard(gameId),
 		Id:    gameId,
