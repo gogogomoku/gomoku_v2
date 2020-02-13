@@ -41,9 +41,9 @@ func (b *Board) GetNextPosition(position Position, direction int8) Position {
 }
 
 func int8IntoInt32(i1 int8, i2 int8, i3 int8, i4 int8) int8 {
-	i := int8(i1) << 6
-	i += int8(i2) << 4
-	i += int8(i3) << 2
-	i += int8(i4)
+	i := i1 << 6
+	i |= i2 << 4
+	i |= i3 << 2
+	i |= i4
 	return i
 }
