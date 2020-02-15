@@ -35,17 +35,17 @@ var CurrentMatches = Arcade{
 // Creates a new match, stores it in Arcade map, returns it's address
 func NewMatch() *Match {
 	CurrentMatches.Counter++
-	gameId := CurrentMatches.Counter
+	matchId := CurrentMatches.Counter
 	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0}
 	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0}
 	match := Match{
-		Board: board.NewBoard(gameId),
-		Id:    gameId,
+		Board: board.NewBoard(matchId),
+		Id:    matchId,
 		P1:    &p1,
 		P2:    &p2,
 	}
-	CurrentMatches.List[gameId] = &match
-	fmt.Println("New game started:", gameId)
+	CurrentMatches.List[matchId] = &match
+	fmt.Println("New match started:", matchId)
 	return &match
 }
 
@@ -56,7 +56,7 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 
 func PrintState(match *Match) {
 	fmt.Printf("%29s\n", "-------------------")
-	fmt.Printf(" %22s %d\n", "Game id:", match.Id)
+	fmt.Printf(" %22s %d\n", "Match id:", match.Id)
 	fmt.Printf("%29s\n", "-------------------")
 	for _, line := range match.Board.Tab {
 		fmt.Println(line)

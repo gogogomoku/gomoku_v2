@@ -20,8 +20,8 @@ const (
 )
 
 type Board struct {
-	Tab    [SIZE][SIZE]int8 `json:"tab"`
-	GameId int              `json:"gameId"`
+	Tab     [SIZE][SIZE]int8 `json:"tab"`
+	MatchId int              `json:"matchId"`
 }
 
 type Position struct {
@@ -29,14 +29,14 @@ type Position struct {
 	Y int8
 }
 
-func NewBoard(gameId int) *Board {
-	b := Board{GameId: gameId}
+func NewBoard(matchId int) *Board {
+	b := Board{MatchId: matchId}
 	return &b
 }
 
 // Places a stone in the board
 func (b *Board) PlaceStone(player *pl.Player, position *Position) {
-	fmt.Printf("MOVE    (game %03d): player %d places at %x\n", b.GameId, player.Id, position)
+	fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	b.Tab[position.Y][position.X] = player.Id
 	canCapture, toCapture := b.CheckCaptures(player, position)
 	if canCapture {
@@ -77,6 +77,6 @@ func (b *Board) Capture(player *pl.Player, toCapture *[]Position) {
 	player.Captured += int8(len(*toCapture))
 	for _, position := range *toCapture {
 		b.Tab[position.Y][position.X] = 0
-		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.GameId, player.Id, position)
+		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.MatchId, player.Id, position)
 	}
 }
