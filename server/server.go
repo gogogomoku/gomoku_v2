@@ -7,11 +7,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin", "http://localhost:8080")
+		next.ServeHTTP(w, r)
+	})
+}
+
 func StartServer() {
 	log.Println("Starting Gomoku in server mode")
 
 	// Basic router
 	r := mux.NewRouter()
+
+	r.Use(corsMiddleware)
 	r.HandleFunc("/", HomeHandler).Methods("GET", "POST")
 	http.Handle("/", r)
 
@@ -24,7 +33,7 @@ func StartServer() {
 	rMatchId.HandleFunc("", GetMatchHandler)
 	rMatchId.HandleFunc("/move", PostMoveHandler).Methods("POST")
 
-	err := http.ListenAndServe(":8080", r)
+	err := http.ListenAndServe(":4242", r)
 	if err != nil {
 		log.Fatal("Unable to run server")
 	}
