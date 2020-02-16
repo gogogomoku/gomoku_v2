@@ -25,7 +25,6 @@ type JsonMove struct {
 // GET /
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW HOME REQUEST")
-	w.Header().Set("Content-Type", "application/json")
 
 	_ = json.NewEncoder(w).Encode(
 		JsonMessage{Message: "Welcome to Gomoku... Use /new-match to create a match"},
@@ -35,7 +34,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // GET /match/new
 func NewMatchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW NEW_MATCH REQUEST")
-	w.Header().Set("Content-Type", "application/json")
 
 	new_match := *arcade.NewMatch()
 	_ = json.NewEncoder(w).Encode(
@@ -46,7 +44,6 @@ func NewMatchHandler(w http.ResponseWriter, r *http.Request) {
 // GET /match/{id}
 func GetMatchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW GET_MATCH REQUEST")
-	w.Header().Set("Content-Type", "application/json")
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	match := arcade.CurrentMatches.List[id]
@@ -64,7 +61,6 @@ func GetMatchHandler(w http.ResponseWriter, r *http.Request) {
 // POST /match/{id}/move
 func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW POST_MOVE REQUEST")
-	w.Header().Set("Content-Type", "application/json")
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	match := arcade.CurrentMatches.List[id]
