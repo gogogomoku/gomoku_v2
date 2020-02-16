@@ -11,6 +11,7 @@ type Match struct {
 	Id      int          `json:"id"`
 	P1      *pl.Player   `json:"p1"`
 	P2      *pl.Player   `json:"p2"`
+	Winner  *pl.Player   `json:"winner"`
 	Board   *board.Board `json:"board"`
 	History []*Move      `json:"history"`
 }
@@ -52,6 +53,9 @@ func NewMatch() *Match {
 func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	match.Board.PlaceStone(player, position)
 	match.History = append(match.History, &Move{player, position})
+	if match.Board.CheckWinningConditions(player, position) {
+		match.Winner = player
+	}
 }
 
 func PrintState(match *Match) {
