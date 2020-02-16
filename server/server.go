@@ -13,6 +13,7 @@ func StartServer() {
 	// Basic router
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler).Methods("GET", "POST")
+	r.Use(mux.CORSMethodMiddleware(r))
 	http.Handle("/", r)
 
 	// Subrouter for /match
@@ -24,7 +25,7 @@ func StartServer() {
 	rMatchId.HandleFunc("", GetMatchHandler)
 	rMatchId.HandleFunc("/move", PostMoveHandler).Methods("POST")
 
-	err := http.ListenAndServe(":8080", r)
+	err := http.ListenAndServe(":4242", r)
 	if err != nil {
 		log.Fatal("Unable to run server")
 	}
