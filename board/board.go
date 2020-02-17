@@ -20,8 +20,8 @@ const (
 )
 
 type Board struct {
-	Tab    [SIZE][SIZE]int8 `json:"tab"`
-	GameId int              `json:"gameId"`
+	Tab     [SIZE][SIZE]int8 `json:"tab"`
+	MatchId int              `json:"matchId"`
 }
 
 type Position struct {
@@ -29,14 +29,14 @@ type Position struct {
 	Y int8
 }
 
-func NewBoard(gameId int) *Board {
-	b := Board{GameId: gameId}
+func NewBoard(matchId int) *Board {
+	b := Board{MatchId: matchId}
 	return &b
 }
 
 // Places a stone in the board
 func (b *Board) PlaceStone(player *pl.Player, position *Position) {
-	fmt.Printf("MOVE    (game %03d): player %d places at %x\n", b.GameId, player.Id, position)
+	fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	b.Tab[position.Y][position.X] = player.Id
 	canCapture, toCapture := b.CheckCaptures(player, position)
 	if canCapture {
@@ -47,26 +47,27 @@ func (b *Board) PlaceStone(player *pl.Player, position *Position) {
 // Check if by placing a stone, playerId can capture
 // returns bool to true if can capturem and a slice of capturable positions
 func (b *Board) CheckCaptures(player *pl.Player, position *Position) (captures bool, list *[]Position) {
-	// Store valid pattern for capture in 32 bits
-	capturingPattern := int8IntoInt32(player.Id, player.OpponentId, player.OpponentId, player.Id)
+	// Store valid pattern for capture into an int32
+	capturingPattern := int8ToInt32(
+		[]int8{player.Id, player.OpponentId, player.OpponentId, player.Id},
+	)
 	posToCapture := []Position{}
 	for direction := int8(0); direction < 8; direction++ {
 		// Build a sequence of positions to check capture
 		sequence := b.GetNPositionsSequence(position, direction, 4)
-		if len(sequence) != 4 {
+		if len(*sequence) != 4 {
 			continue
 		}
-		// store found sequence in 32 bits and compare
-		foundPattern := int8IntoInt32(
-			b.GetPositionValue(sequence[0]),
-			b.GetPositionValue(sequence[1]),
-			b.GetPositionValue(sequence[2]),
-			b.GetPositionValue(sequence[3]),
-		)
+		sequenceValues := *b.GetSequenceValues(sequence)
+		// First element changes to playerID to check if capture is possible even
+		// In a board where the player hasn't placed stone yet
+		sequenceValues[0] = player.Id
+		// store found sequence into an int32 and compare
+		foundPattern := int8ToInt32(sequenceValues)
 		if foundPattern == capturingPattern {
 			captures = true
-			posToCapture = append(posToCapture, sequence[1])
-			posToCapture = append(posToCapture, sequence[2])
+			posToCapture = append(posToCapture, (*sequence)[1])
+			posToCapture = append(posToCapture, (*sequence)[2])
 		}
 	}
 	return captures, &posToCapture
@@ -77,6 +78,32 @@ func (b *Board) Capture(player *pl.Player, toCapture *[]Position) {
 	player.Captured += int8(len(*toCapture))
 	for _, position := range *toCapture {
 		b.Tab[position.Y][position.X] = 0
-		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.GameId, player.Id, position)
+		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.MatchId, player.Id, position)
 	}
+}
+
+func (b *Board) CheckWinningConditions(player *pl.Player, position *Position) bool {
+	return b.MoveCreatesFive(player, position)
+}
+
+// Check if placing a stone creates a winning sequence of 5 or more
+func (b *Board) MoveCreatesFive(player *pl.Player, position *Position) bool {
+	// Get bidirectional sequences to look for winning pattern
+	sequences := b.GetNSurroundingPositionsSequence(position, 5)
+	for _, seq := range *sequences {
+		// For each sequence, count contiguous positions with player ID value
+		counter := 0
+		values := b.GetSequenceValues(&seq)
+		for _, v := range *values {
+			if v == player.Id {
+				counter++
+				if counter == 5 {
+					return true
+				}
+			} else {
+				counter = 0
+			}
+		}
+	}
+	return false
 }
