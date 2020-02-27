@@ -83,6 +83,9 @@ func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 		player = match.P1
 	} else if params.PlayerId == 2 {
 		player = match.P2
+	} else {
+		http.Error(w, "Bad request: bad player Id in arguments", http.StatusBadRequest)
+		return
 	}
 	position := board.Position{X: params.PosX, Y: params.PosY}
 	match.AddMove(player, &position)
