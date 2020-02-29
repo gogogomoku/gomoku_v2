@@ -13,6 +13,7 @@ export default new Vuex.Store({
     httpEndpoint: process.env.VUE_APP_SERVER_HTTP || "http://localhost:4242",
     match: {
       matchId: -1,
+      waiting: undefined,
       currentPlayerId: -1,
       suggestionTimer: 0,
       suggestorOn: undefined,

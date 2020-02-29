@@ -1,15 +1,14 @@
 <template>
   <div
-    class="min-w-full min-h-full p-5"
+    class="board min-w-full w-auto p-5"
     v-if="match && match.board && match.board.tab && match.board.tab.length"
   >
     <div
-      class="row flex w-full justify-between align-stretch"
+      class="row flex justify-center align-center p-0"
       v-for="(line, posY) in match.board.tab"
       :key="posY"
     >
-      {{ posY }}
-      <!-- Todo: More efficient isSuggestion thingy -->
+      <div class="text-gray-600 w-5">{{ posY }}</div>
       <Tile
         v-for="(tile, posX) in line"
         :key="posX + (match.board.tab.length * posY)"
