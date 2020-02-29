@@ -1,0 +1,11 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.btn {
+  @apply font-bold py-2 px-4 mt-2 font-mono rounded-sm border border-gray-500;
+}
+
+.btn:hover {
+  @apply bg-gray-300 cursor-pointer;
+}

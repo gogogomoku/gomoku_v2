@@ -1,6 +1,13 @@
 <template>
-  <div class="tab" v-if="match && match.board && match.board.tab && match.board.tab.length">
-    <div class="row" v-for="(line, posY) in match.board.tab" :key="posY">
+  <div
+    class="min-w-full min-h-full p-5"
+    v-if="match && match.board && match.board.tab && match.board.tab.length"
+  >
+    <div
+      class="row flex w-full justify-between align-stretch"
+      v-for="(line, posY) in match.board.tab"
+      :key="posY"
+    >
       <Tile
         v-for="(tile, posX) in line"
         :key="posX + (match.board.tab.length * posY)"
@@ -25,23 +32,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.tab {
-  width: 800px;
-  padding: 10px;
-  margin: 0 auto;
-  flex-grow: 0;
-  display: flex;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-}
-
-.row {
-  /* border: 1px solid red; */
-  flex-basis: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-}
-</style>

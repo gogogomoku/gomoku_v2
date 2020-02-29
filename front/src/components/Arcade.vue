@@ -1,11 +1,8 @@
 <template>
-  <div class="hello">
-    <h1>Gomoku_v2 Arcade</h1>
-    <pre v-if="message">{{ message.Message }}</pre>
-    <button
-      v-if="message.Message && message.Message.length"
-      @click="newMatch({p1ai: false, p2ai: false})"
-    >New match</button>
+  <div class="w-screen flex flex-wrap justify-center items-center text-center">
+    <h1 class="flex-none min-w-full py-3 px-4 text-2xl">Gomoku_v2 Arcade</h1>
+    <pre v-if="message" class="flex-none min-w-full py-3 px-4">{{ message.Message }}</pre>
+    <button class="btn" v-if="message.Message && message.Message.length" @click="newMatch">New match</button>
   </div>
 </template>
 
@@ -22,4 +19,9 @@ export default {
 </script>
 
 <style scoped>
+/* Local overrides */
+
+.btn:hover {
+  @apply bg-gray-500;
+}
 </style>
