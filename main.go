@@ -31,8 +31,8 @@ func main() {
 
 func StartLocalGomoku() {
 	fmt.Println("This multi-gomoku game thing is on!")
-	match1 := arcade.NewMatch()
-	match2 := arcade.NewMatch()
+	match1 := arcade.NewMatch(true, true)
+	match2 := arcade.NewMatch(true, true)
 	match1.AddMove(match1.P1, &board.Position{X: 0, Y: 3})
 	match1.AddMove(match1.P2, &board.Position{X: 0, Y: 2})
 	match1.AddMove(match1.P1, &board.Position{X: 1, Y: 0})

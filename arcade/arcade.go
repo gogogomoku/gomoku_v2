@@ -34,11 +34,11 @@ var CurrentMatches = Arcade{
 }
 
 // Creates a new match, stores it in Arcade map, returns it's address
-func NewMatch() *Match {
+func NewMatch(aiP1 bool, aiP2 bool) *Match {
 	CurrentMatches.Counter++
 	matchId := CurrentMatches.Counter
-	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0}
-	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0}
+	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1}
+	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2}
 	match := Match{
 		Board: board.NewBoard(matchId),
 		Id:    matchId,

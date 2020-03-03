@@ -2,7 +2,10 @@
   <div class="hello">
     <h1>Gomoku_v2 Arcade</h1>
     <pre v-if="message">{{ message.Message }}</pre>
-    <button v-if="message.Message && message.Message.length" @click="newMatch">New match</button>
+    <button
+      v-if="message.Message && message.Message.length"
+      @click="newMatch({p1ai: false, p2ai: false})"
+    >New match</button>
   </div>
 </template>
 
