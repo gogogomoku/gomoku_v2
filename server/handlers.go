@@ -22,6 +22,11 @@ type JsonMove struct {
 	PosY     int8 `json:"posY"`
 }
 
+type NewGameOpts struct {
+	Player1Ai int8 `json:"player1Ai"`
+	Player2Ai int8 `json:"player2Ai"`
+}
+
 // GET /
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW HOME REQUEST")
@@ -35,7 +40,16 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 func NewMatchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("NEW NEW_MATCH REQUEST")
 
-	new_match := *arcade.NewMatch()
+	player1Ai, err := strconv.ParseBool(r.FormValue("p1ai"))
+	if err != nil {
+		player1Ai = false
+	}
+	player2Ai, err := strconv.ParseBool(r.FormValue("p2ai"))
+	if err != nil {
+		player2Ai = false
+	}
+
+	new_match := *arcade.NewMatch(player1Ai, player2Ai)
 	_ = json.NewEncoder(w).Encode(
 		new_match,
 	)

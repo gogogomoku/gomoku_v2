@@ -28,7 +28,9 @@ func StartServer() {
 
 	// Subrouter for /match
 	rMatch := r.PathPrefix("/match").Subrouter()
+	// Players are human unless p{n}ai=true in query
 	rMatch.HandleFunc("/new", NewMatchHandler)
+	rMatch.Path("/new").Queries("p1ai", "{p1ai:true|false}", "p2ai", "{p2ai:true|false}").HandlerFunc(NewMatchHandler)
 
 	// Subrouter for /match/{id}
 	rMatchId := rMatch.PathPrefix("/{id:[0-9]+}").Subrouter()

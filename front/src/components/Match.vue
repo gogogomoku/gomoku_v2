@@ -4,12 +4,12 @@
     <div class="playerWrapper">
       <div class="playerBox">
         <p>p1</p>
-        <p>AiStatus: {{ parseInt(match.players.p1.aiStatus) }}</p>
+        <p>Is AI: {{match.players.p1.isAi}}</p>
         <p>Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
       </div>
       <div class="playerBox">
         <p>p2</p>
-        <p>AiStatus: {{ parseInt(match.players.p2.aiStatus) }}</p>
+        <p>Is AI: {{ match.players.p2.isAi }}</p>
         <p>Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
       </div>
     </div>

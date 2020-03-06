@@ -14,7 +14,7 @@ export default new Vuex.Store({
       matchId: -1,
       currentPlayerId: -1,
       suggestionTimer: 0,
-      suggestorOn: false,
+      suggestorOn: undefined,
       history: null,
       board: {
         size: 19,
@@ -24,12 +24,12 @@ export default new Vuex.Store({
       },
       players: {
         p1: {
-          aiStatus: 1,
+          isAi: undefined,
           id: 1,
           captured: 0
         },
         p2: {
-          aiStatus: 0,
+          isAi: undefined,
           id: 2,
           captured: 0
         }
@@ -45,12 +45,16 @@ export default new Vuex.Store({
     newMatch(state, payload) {
       const {
         id,
-        board: { tab }
+        board: { tab },
+        p1,
+        p2
       } = payload;
       state.match.matchId = id;
       state.match.currentPlayerId = 1;
       state.match.board.tab = cloneDeep(tab);
       state.match.size = tab.length;
+      state.match.players.p1.isAi = p1.isAi;
+      state.match.players.p2.isAi = p2.isAi;
     },
     makeMove(state, payload) {
       state.match.currentPlayerId = state.match.currentPlayerId ^ 0x3;
@@ -73,7 +77,12 @@ export default new Vuex.Store({
         await fetch(`${state.httpEndpoint}`).then(result => result.json())
       );
     },
-    async newMatch({ state, commit }) {
+    async newMatch({ state, commit }, { p1ai, p2ai }) {
+      let url = new URL(state.httpEndpoint);
+      const params = { p1ai, p2ai };
+      Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+      );
       commit(
         "newMatch",
         await fetch(`${state.httpEndpoint}/match/new`).then(result =>
