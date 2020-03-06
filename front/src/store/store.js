@@ -9,6 +9,7 @@ export default new Vuex.Store({
   strict: true,
   state: {
     message: null,
+    errorResponse: "",
     httpEndpoint: process.env.VUE_APP_SERVER_HTTP || "http://localhost:4242",
     match: {
       matchId: -1,
@@ -39,6 +40,9 @@ export default new Vuex.Store({
   getters: {},
   mutations: {
     // update state
+    setError(state, payload) {
+      state.errorResponse = payload;
+    },
     getHome(state, payload) {
       state.message = payload;
     },
@@ -74,7 +78,14 @@ export default new Vuex.Store({
     async getHome({ state, commit }) {
       commit(
         "getHome",
-        await fetch(`${state.httpEndpoint}`).then(result => result.json())
+        await fetch(`${state.httpEndpoint}`).then(
+          result => result.json(),
+          async err => {
+            commit("setError", err.toString());
+            // await new Promise(r => setTimeout(r, 2000));
+            // commit("setError", "");
+          }
+        )
       );
     },
     async newMatch({ state, commit }, { p1ai, p2ai }) {

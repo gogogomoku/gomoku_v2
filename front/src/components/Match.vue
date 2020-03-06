@@ -1,16 +1,16 @@
 <template>
-  <div class="hello">
-    <h1>Gomoku_v2 Match {{match.id}}</h1>
-    <div class="playerWrapper">
-      <div class="playerBox">
-        <p>p1</p>
-        <p>Is AI: {{match.players.p1.isAi}}</p>
-        <p>Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
+  <div class="w-full h-full flex flex-wrap p-10">
+    <h1 class="flex-none min-w-full">Gomoku_v2 Match {{match.id}}</h1>
+    <div class="flex-none min-w-full py-3 flex flex-wrap">
+      <div class="flex flex-wrap">
+        <p class="min-w-full">p1</p>
+        <p class="min-w-full">Is AI: {{ `${match.players.p1.isAi}` }}</p>
+        <p class="min-w-full">Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
       </div>
-      <div class="playerBox">
-        <p>p2</p>
-        <p>Is AI: {{ match.players.p2.isAi }}</p>
-        <p>Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
+      <div class="flex flex-wrap">
+        <p class="min-w-full">p2</p>
+        <p class="min-w-full">Is AI: {{ `${match.players.p2.isAi}` }}</p>
+        <p class="min-w-full">Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
       </div>
     </div>
     <Board v-if="match && match.board && match.board.tab && match.board.tab.length" />
@@ -34,12 +34,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.playerWrapper {
-  display: flex;
-}
-.playerClass {
-  display: flex;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tile" @click="makeMove({ posX, posY })">{{ parseInt(value) }}</div>
+  <div class="btn inline-block p-2" @click="makeMove({ posX, posY })">{{ parseInt(value) }}</div>
 </template>
 
 <script>
@@ -15,12 +15,3 @@ export default {
   methods: { ...mapActions(["makeMove"]) }
 };
 </script>
-
-<style>
-.tile {
-  /* border: 1px solid blue; */
-  display: inline-block;
-  margin: 0.25%;
-  cursor: pointer;
-}
-</style>
