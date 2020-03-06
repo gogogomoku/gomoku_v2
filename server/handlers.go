@@ -101,6 +101,10 @@ func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad request: bad player Id in arguments", http.StatusBadRequest)
 		return
 	}
+	if match.Board.Tab[params.PosY][params.PosX] != 0 {
+		http.Error(w, "Bad request: position is invalid", http.StatusBadRequest)
+		return
+	}
 	position := board.Position{X: params.PosX, Y: params.PosY}
 	match.AddMove(player, &position)
 
