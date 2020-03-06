@@ -41,7 +41,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0},
+				player:   &pl.Player{1, 2, 0, false},
 				position: &Position{X: 0, Y: 0},
 			},
 			wantCaptures: false,
@@ -61,7 +61,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0},
+				player:   &pl.Player{1, 2, 0, false},
 				position: &Position{X: 3, Y: 0},
 			},
 			wantCaptures: false,
@@ -82,7 +82,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0},
+				player:   &pl.Player{1, 2, 0, false},
 				position: &Position{X: 3, Y: 0},
 			},
 			wantCaptures: true,
@@ -103,7 +103,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0},
+				player:   &pl.Player{1, 2, 0, false},
 				position: &Position{X: 3, Y: 3},
 			},
 			wantCaptures: true,
@@ -123,6 +123,110 @@ func TestBoard_CheckCaptures(t *testing.T) {
 			}
 			if !reflect.DeepEqual(gotList, tt.wantList) {
 				t.Errorf("Board.CheckCaptures() gotList = %v, want %v", gotList, tt.wantList)
+			}
+		})
+	}
+}
+
+func TestBoard_PlaceStone(t *testing.T) {
+	type fields struct {
+		Tab     [SIZE][SIZE]int8
+		MatchId int
+	}
+	type args struct {
+		player   *pl.Player
+		position *Position
+	}
+	tests := []struct {
+		name      string
+		fields    fields
+		args      args
+		wantValue int8
+	}{
+		{
+			name: "Place at (0, 0)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: 0, Y: 0},
+			},
+			wantValue: 1,
+		},
+		{
+			name: "Place at (SIZE-1, SIZE-1)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: SIZE - 1, Y: SIZE - 1},
+			},
+			wantValue: 1,
+		},
+		{
+			name: "Place at (-1, 0)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: -1, Y: 0},
+			},
+			wantValue: -1,
+		},
+		{
+			name: "Place at (0, -1)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: 0, Y: -1},
+			},
+			wantValue: -1,
+		},
+		{
+			name: "Place at (SIZE, 0)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: SIZE, Y: 0},
+			},
+			wantValue: -1,
+		},
+		{
+			name: "Place at (0, SIZE)",
+			fields: fields{
+				Tab:     NewBoard(0).Tab,
+				MatchId: 1,
+			},
+			args: args{
+				player:   &pl.Player{1, 2, 0, false},
+				position: &Position{X: 0, Y: SIZE},
+			},
+			wantValue: -1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			b := &Board{
+				Tab:     tt.fields.Tab,
+				MatchId: tt.fields.MatchId,
+			}
+			b.PlaceStone(tt.args.player, tt.args.position)
+			gotValue := b.GetPositionValue(*tt.args.position)
+			if gotValue != tt.wantValue {
+				t.Errorf("Board.CheckCaptures() gotCaptures = %v, want %v", gotValue, tt.wantValue)
 			}
 		})
 	}

@@ -1,6 +1,9 @@
 package board
 
 func (b *Board) GetPositionValue(position Position) int8 {
+	if position.X < 0 || position.X >= SIZE || position.Y < 0 || position.Y >= SIZE {
+		return -1
+	}
 	return b.Tab[position.Y][position.X]
 }
 
