@@ -9,12 +9,14 @@
       :key="posY"
     >
       {{ posY }}
+      <!-- Todo: More efficient isSuggestion thingy -->
       <Tile
         v-for="(tile, posX) in line"
         :key="posX + (match.board.tab.length * posY)"
         :value="match.board.tab[posY][posX]"
         :posX="posX"
         :posY="posY"
+        :isSuggestion="posY === match.suggestion.y && posX === match.suggestion.x"
       />
     </div>
   </div>

@@ -16,6 +16,10 @@ export default new Vuex.Store({
       currentPlayerId: -1,
       suggestionTimer: 0,
       suggestorOn: undefined,
+      suggestion: {
+        x: -1,
+        y: -1
+      },
       history: null,
       board: {
         size: 19,
@@ -51,7 +55,8 @@ export default new Vuex.Store({
         id,
         board: { tab },
         p1,
-        p2
+        p2,
+        suggestion: { X, Y }
       } = payload;
       state.match.matchId = id;
       state.match.currentPlayerId = 1;
@@ -59,6 +64,8 @@ export default new Vuex.Store({
       state.match.size = tab.length;
       state.match.players.p1.isAi = p1.isAi;
       state.match.players.p2.isAi = p2.isAi;
+      state.match.suggestion.x = X;
+      state.match.suggestion.y = Y;
     },
     makeMove(state, payload) {
       state.match.currentPlayerId = state.match.currentPlayerId ^ 0x3;
@@ -66,12 +73,15 @@ export default new Vuex.Store({
         board: { tab },
         history,
         p1: { captured: p1Captured },
-        p2: { captured: p2Captured }
+        p2: { captured: p2Captured },
+        suggestion: { X, Y }
       } = payload;
       state.match.board.tab = cloneDeep(tab);
       state.match.history = cloneDeep(history);
       state.match.players.p1.captured = p1Captured;
       state.match.players.p2.captured = p2Captured;
+      state.match.suggestion.x = X;
+      state.match.suggestion.y = Y;
     }
   },
   actions: {

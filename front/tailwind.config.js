@@ -2,7 +2,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        red: "#b96455"
+        red: "#b96455",
+        green: "#4BD9A9",
+        lightgreen: "#7FFFD4",
+        somegray: "#bbb"
       },
       fontFamily: {
         sans: [
