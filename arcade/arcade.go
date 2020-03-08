@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gogogomoku/gomoku_v2/board"
+	"github.com/gogogomoku/gomoku_v2/heuristic"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
@@ -56,6 +57,7 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
+	heuristic.Suggest(match.Board, position, player.Id)
 }
 
 func PrintState(match *Match) {
