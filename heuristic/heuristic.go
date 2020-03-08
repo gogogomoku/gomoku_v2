@@ -26,12 +26,12 @@ func EvaluateBoard(b *board.Board, move *board.Position, player *player.Player) 
 }
 
 func GetSuggestion(b *board.Board, lastMove *board.Position, player *player.Player) *board.Position {
-	curY := lastMove.Y - 9
+	curY := lastMove.Y - 3
 	bestPosition := board.Position{X: -1, Y: -1}
 	bestScore := -1
-	for curY <= lastMove.Y+9 {
-		curX := lastMove.X - 9
-		for curX <= lastMove.X+9 {
+	for curY <= lastMove.Y+3 {
+		curX := lastMove.X - 3
+		for curX <= lastMove.X+3 {
 			position := board.Position{X: curX, Y: curY}
 			if b.GetPositionValue(position) == 0 {
 				tmpBoard := *b

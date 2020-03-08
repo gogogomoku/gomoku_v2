@@ -58,6 +58,7 @@ func NewMatch(aiP1 bool, aiP2 bool) *Match {
 		P2:    &p2,
 	}
 	CurrentMatches.List[matchId] = &match
+	match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
 	fmt.Println("New match started:", matchId)
 	return &match
 }
