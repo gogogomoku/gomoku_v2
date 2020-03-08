@@ -8,6 +8,7 @@
       v-for="(line, posY) in match.board.tab"
       :key="posY"
     >
+      {{ posY }}
       <Tile
         v-for="(tile, posX) in line"
         :key="posX + (match.board.tab.length * posY)"

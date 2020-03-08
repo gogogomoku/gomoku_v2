@@ -37,7 +37,7 @@ func NewBoard(matchId int) *Board {
 
 // Places a stone in the board
 func (b *Board) PlaceStone(player *pl.Player, position *Position) {
-	fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
+	// fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	if position.X < 0 || position.X >= SIZE || position.Y < 0 || position.Y >= SIZE {
 		fmt.Printf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, position)
 		return

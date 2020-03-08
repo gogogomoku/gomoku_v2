@@ -5,6 +5,7 @@ import (
 
 	"github.com/gogogomoku/gomoku_v2/board"
 	"github.com/gogogomoku/gomoku_v2/heuristic"
+	"github.com/gogogomoku/gomoku_v2/player"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
@@ -34,12 +35,21 @@ var CurrentMatches = Arcade{
 	Counter: 0,
 }
 
+func GetOpponent(player *player.Player) *player.Player {
+	match := CurrentMatches.List[player.MatchId]
+	if player.Id == 1 {
+		return match.P2
+	} else {
+		return match.P1
+	}
+}
+
 // Creates a new match, stores it in Arcade map, returns it's address
 func NewMatch(aiP1 bool, aiP2 bool) *Match {
 	CurrentMatches.Counter++
 	matchId := CurrentMatches.Counter
-	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1}
-	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2}
+	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1, MatchId: matchId}
+	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2, MatchId: matchId}
 	match := Match{
 		Board: board.NewBoard(matchId),
 		Id:    matchId,
@@ -57,7 +67,7 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
-	heuristic.Suggest(match.Board, position, player.Id)
+	heuristic.Suggest(match.Board, position, GetOpponent(player))
 }
 
 func PrintState(match *Match) {
