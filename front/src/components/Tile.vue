@@ -1,5 +1,8 @@
 <template>
-  <div class="btn inline-block p-2" @click="makeMove({ posX, posY })">{{ parseInt(value) }}</div>
+  <div>
+    <div v-if="posY == 0">{{ posX }}</div>
+    <div class="btn inline-block p-2" @click="makeMove({ posX, posY })">{{ parseInt(value) }}</div>
+  </div>
 </template>
 
 <script>

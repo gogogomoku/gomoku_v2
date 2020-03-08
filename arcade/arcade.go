@@ -4,16 +4,19 @@ import (
 	"fmt"
 
 	"github.com/gogogomoku/gomoku_v2/board"
+	"github.com/gogogomoku/gomoku_v2/heuristic"
+	"github.com/gogogomoku/gomoku_v2/player"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
 type Match struct {
-	Id      int          `json:"id"`
-	P1      *pl.Player   `json:"p1"`
-	P2      *pl.Player   `json:"p2"`
-	Winner  *pl.Player   `json:"winner"`
-	Board   *board.Board `json:"board"`
-	History []*Move      `json:"history"`
+	Id         int             `json:"id"`
+	P1         *pl.Player      `json:"p1"`
+	P2         *pl.Player      `json:"p2"`
+	Suggestion *board.Position `json:"suggestion"`
+	Winner     *pl.Player      `json:"winner"`
+	Board      *board.Board    `json:"board"`
+	History    []*Move         `json:"history"`
 }
 
 // A struct containing several simoultaneous matches
@@ -33,12 +36,21 @@ var CurrentMatches = Arcade{
 	Counter: 0,
 }
 
+func GetOpponent(player *player.Player) *player.Player {
+	match := CurrentMatches.List[player.MatchId]
+	if player.Id == 1 {
+		return match.P2
+	} else {
+		return match.P1
+	}
+}
+
 // Creates a new match, stores it in Arcade map, returns it's address
 func NewMatch(aiP1 bool, aiP2 bool) *Match {
 	CurrentMatches.Counter++
 	matchId := CurrentMatches.Counter
-	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1}
-	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2}
+	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1, MatchId: matchId}
+	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2, MatchId: matchId}
 	match := Match{
 		Board: board.NewBoard(matchId),
 		Id:    matchId,
@@ -46,6 +58,7 @@ func NewMatch(aiP1 bool, aiP2 bool) *Match {
 		P2:    &p2,
 	}
 	CurrentMatches.List[matchId] = &match
+	match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
 	fmt.Println("New match started:", matchId)
 	return &match
 }
@@ -56,6 +69,7 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
+	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
 }
 
 func PrintState(match *Match) {
