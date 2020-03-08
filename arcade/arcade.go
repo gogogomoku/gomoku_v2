@@ -10,12 +10,13 @@ import (
 )
 
 type Match struct {
-	Id      int          `json:"id"`
-	P1      *pl.Player   `json:"p1"`
-	P2      *pl.Player   `json:"p2"`
-	Winner  *pl.Player   `json:"winner"`
-	Board   *board.Board `json:"board"`
-	History []*Move      `json:"history"`
+	Id         int             `json:"id"`
+	P1         *pl.Player      `json:"p1"`
+	P2         *pl.Player      `json:"p2"`
+	Suggestion *board.Position `json:"suggestion"`
+	Winner     *pl.Player      `json:"winner"`
+	Board      *board.Board    `json:"board"`
+	History    []*Move         `json:"history"`
 }
 
 // A struct containing several simoultaneous matches
@@ -67,7 +68,7 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) {
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
-	heuristic.Suggest(match.Board, position, GetOpponent(player))
+	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
 }
 
 func PrintState(match *Match) {

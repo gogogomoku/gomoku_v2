@@ -1,8 +1,6 @@
 package heuristic
 
 import (
-	"fmt"
-
 	"github.com/gogogomoku/gomoku_v2/board"
 	"github.com/gogogomoku/gomoku_v2/player"
 )
@@ -27,18 +25,17 @@ func EvaluateBoard(b *board.Board, move *board.Position, player *player.Player) 
 	return maxSequence * 100
 }
 
-func Suggest(b *board.Board, move *board.Position, player *player.Player) *board.Position {
-	curY := move.Y - 5
+func GetSuggestion(b *board.Board, lastMove *board.Position, player *player.Player) *board.Position {
+	curY := lastMove.Y - 9
 	bestPosition := board.Position{X: -1, Y: -1}
 	bestScore := -1
-	for curY <= move.Y+5 {
-		curX := move.X - 5
-		for curX <= move.X+5 {
+	for curY <= lastMove.Y+9 {
+		curX := lastMove.X - 9
+		for curX <= lastMove.X+9 {
 			position := board.Position{X: curX, Y: curY}
 			if b.GetPositionValue(position) == 0 {
 				tmpBoard := *b
 				tmpBoard.PlaceStone(player, &position)
-				fmt.Print(position)
 				score := EvaluateBoard(&tmpBoard, &position, player)
 				if score > bestScore {
 					bestScore = score
@@ -49,6 +46,6 @@ func Suggest(b *board.Board, move *board.Position, player *player.Player) *board
 		}
 		curY++
 	}
-	fmt.Printf("bestPosition :: %#v\n", bestPosition)
+	// fmt.Printf("bestPosition :: %#v\n", bestPosition)
 	return &bestPosition
 }
