@@ -1,6 +1,7 @@
 package board
 
 import (
+	"errors"
 	"fmt"
 
 	pl "github.com/gogogomoku/gomoku_v2/player"
@@ -36,17 +37,22 @@ func NewBoard(matchId int) *Board {
 }
 
 // Places a stone in the board
-func (b *Board) PlaceStone(player *pl.Player, position *Position) {
+func (b *Board) PlaceStone(player *pl.Player, position *Position) (err error, toCapture *[]Position) {
 	// fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	if position.X < 0 || position.X >= SIZE || position.Y < 0 || position.Y >= SIZE {
-		fmt.Printf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, position)
-		return
+		errMsg := fmt.Sprintf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, position)
+		return errors.New(errMsg), nil
+	}
+	if b.Tab[position.Y][position.X] != 0 {
+		errMsg := fmt.Sprintf("ERROR   (match %03d): Position is already occupied. %x\n", b.MatchId, position)
+		return errors.New(errMsg), nil
 	}
 	b.Tab[position.Y][position.X] = player.Id
 	canCapture, toCapture := b.CheckCaptures(player, position)
 	if canCapture {
 		b.Capture(player, toCapture)
 	}
+	return nil, toCapture
 }
 
 // Check if by placing a stone, playerId can capture
