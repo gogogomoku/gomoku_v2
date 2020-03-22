@@ -37,7 +37,7 @@ func NewBoard(matchId int) *Board {
 }
 
 // Places a stone in the board
-func (b *Board) PlaceStone(player *pl.Player, position *Position) (err error, toCapture *[]Position) {
+func (b *Board) PlaceStone(player *pl.Player, position *Position, countCaptures bool) (err error, toCapture *[]Position) {
 	// fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	if position.X < 0 || position.X >= SIZE || position.Y < 0 || position.Y >= SIZE {
 		errMsg := fmt.Sprintf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, position)
@@ -50,7 +50,7 @@ func (b *Board) PlaceStone(player *pl.Player, position *Position) (err error, to
 	b.Tab[position.Y][position.X] = player.Id
 	canCapture, toCapture := b.CheckCaptures(player, position)
 	if canCapture {
-		b.Capture(player, toCapture)
+		b.Capture(player, toCapture, countCaptures)
 	}
 	return nil, toCapture
 }
@@ -85,8 +85,10 @@ func (b *Board) CheckCaptures(player *pl.Player, position *Position) (captures b
 }
 
 // Capture surrounding opponent stones for a playerId stone
-func (b *Board) Capture(player *pl.Player, toCapture *[]Position) {
-	player.Captured += int8(len(*toCapture))
+func (b *Board) Capture(player *pl.Player, toCapture *[]Position, countCaptures bool) {
+	if countCaptures {
+		player.Captured += int8(len(*toCapture))
+	}
 	for _, position := range *toCapture {
 		b.Tab[position.Y][position.X] = 0
 		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.MatchId, player.Id, position)

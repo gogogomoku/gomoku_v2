@@ -65,7 +65,7 @@ func NewMatch(aiP1 bool, aiP2 bool) *Match {
 }
 
 func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
-	err, toCapture := match.Board.PlaceStone(player, position)
+	err, toCapture := match.Board.PlaceStone(player, position, true)
 	if err != nil {
 		return err
 	}

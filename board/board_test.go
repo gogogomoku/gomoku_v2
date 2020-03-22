@@ -271,7 +271,7 @@ func TestBoard_PlaceStone(t *testing.T) {
 				Tab:     tt.fields.Tab,
 				MatchId: tt.fields.MatchId,
 			}
-			b.PlaceStone(tt.args.player, tt.args.position)
+			b.PlaceStone(tt.args.player, tt.args.position, true)
 			gotValue := b.GetPositionValue(*tt.args.position)
 			if gotValue != tt.wantValue {
 				t.Errorf("Board.CheckCaptures() gotCaptures = %v, want %v", gotValue, tt.wantValue)
