@@ -115,3 +115,28 @@ func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 	)
 
 }
+
+// POST /match/{id}/undo
+func PostUnapplyMoveHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("NEW POST_UNAPPLY_MOVE REQUEST")
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	match := arcade.CurrentMatches.List[id]
+
+	if match == nil {
+		http.Error(w, "Bad request: match doesn't exist", http.StatusBadRequest)
+		return
+	}
+
+	err := match.UnapplyLastMove()
+	if err != nil {
+		errMsg := fmt.Sprintf("Bad request: %s", err)
+		http.Error(w, errMsg, http.StatusBadRequest)
+		return
+	}
+
+	_ = json.NewEncoder(w).Encode(
+		match,
+	)
+
+}

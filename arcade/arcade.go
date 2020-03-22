@@ -1,7 +1,9 @@
 package arcade
 
 import (
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/gogogomoku/gomoku_v2/board"
 	"github.com/gogogomoku/gomoku_v2/heuristic"
@@ -74,6 +76,32 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
 		match.Winner = player
 	}
 	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
+	return nil
+}
+
+func (match *Match) UnapplyLastMove() error {
+	if len(match.History) == 0 {
+		errMsg := fmt.Sprintf("ERROR   (match %03d): Match history is empty.\n", match.Id)
+		return errors.New(errMsg)
+	}
+	// Save a reference to last move and remove it from history and board
+	lastMove := match.History[len(match.History)-1]
+	log.Printf("Unapplying move: %x\n", lastMove.Position)
+	match.History = match.History[:len(match.History)-1]
+	match.Board.Tab[lastMove.Position.Y][lastMove.Position.X] = 0
+	// If move involved captures, replace captured stones and update captured counter
+	if len(*lastMove.Captures) > 0 {
+		for _, piece := range *lastMove.Captures {
+			match.Board.Tab[piece.Y][piece.X] = GetOpponent(lastMove.Player).Id
+		}
+		lastMove.Player.Captured -= int8(len(*lastMove.Captures))
+	}
+	// Recalculate suggestion for player
+	if len(match.History) == 0 {
+		match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
+	} else {
+		match.Suggestion = heuristic.GetSuggestion(match.Board, lastMove.Position, lastMove.Player)
+	}
 	return nil
 }
 
