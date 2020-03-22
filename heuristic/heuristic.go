@@ -35,7 +35,7 @@ func GetSuggestion(b *board.Board, lastMove *board.Position, player *player.Play
 			position := board.Position{X: curX, Y: curY}
 			if b.GetPositionValue(position) == 0 {
 				tmpBoard := *b
-				tmpBoard.PlaceStone(player, &position)
+				tmpBoard.PlaceStone(player, &position, false)
 				score := EvaluateBoard(&tmpBoard, &position, player)
 				if score > bestScore {
 					bestScore = score
