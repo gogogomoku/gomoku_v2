@@ -41,7 +41,12 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 0, Y: 0},
 			},
 			wantCaptures: false,
@@ -61,7 +66,11 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{Id: 1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 3, Y: 0},
 			},
 			wantCaptures: false,
@@ -82,7 +91,12 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 3, Y: 0},
 			},
 			wantCaptures: true,
@@ -103,7 +117,12 @@ func TestBoard_CheckCaptures(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 3, Y: 3},
 			},
 			wantCaptures: true,
@@ -150,7 +169,12 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 0, Y: 0},
 			},
 			wantValue: 1,
@@ -162,7 +186,11 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{Id: 1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: SIZE - 1, Y: SIZE - 1},
 			},
 			wantValue: 1,
@@ -174,7 +202,12 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: -1, Y: 0},
 			},
 			wantValue: -1,
@@ -186,7 +219,12 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 0, Y: -1},
 			},
 			wantValue: -1,
@@ -198,7 +236,12 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: SIZE, Y: 0},
 			},
 			wantValue: -1,
@@ -210,7 +253,12 @@ func TestBoard_PlaceStone(t *testing.T) {
 				MatchId: 1,
 			},
 			args: args{
-				player:   &pl.Player{1, 2, 0, false},
+				player: &pl.Player{
+					Id:         1,
+					OpponentId: 2,
+					Captured:   0,
+					IsAi:       false,
+				},
 				position: &Position{X: 0, Y: SIZE},
 			},
 			wantValue: -1,
