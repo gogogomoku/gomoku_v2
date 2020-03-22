@@ -26,8 +26,9 @@ type Arcade struct {
 }
 
 type Move struct {
-	Player   *pl.Player      `json:"player"`
-	Position *board.Position `json:"position"`
+	Player   *pl.Player        `json:"player"`
+	Position *board.Position   `json:"position"`
+	Captures *[]board.Position `json:"captures"`
 }
 
 // Global object containing a reference to simoultaneous matches
@@ -63,13 +64,17 @@ func NewMatch(aiP1 bool, aiP2 bool) *Match {
 	return &match
 }
 
-func (match *Match) AddMove(player *pl.Player, position *board.Position) {
-	match.Board.PlaceStone(player, position)
-	match.History = append(match.History, &Move{player, position})
+func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
+	err, toCapture := match.Board.PlaceStone(player, position)
+	if err != nil {
+		return err
+	}
+	match.History = append(match.History, &Move{player, position, toCapture})
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
 	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
+	return nil
 }
 
 func PrintState(match *Match) {
