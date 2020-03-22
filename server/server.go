@@ -36,6 +36,7 @@ func StartServer() {
 	rMatchId := rMatch.PathPrefix("/{id:[0-9]+}").Subrouter()
 	rMatchId.HandleFunc("", GetMatchHandler)
 	rMatchId.HandleFunc("/move", PostMoveHandler).Methods("POST")
+	rMatchId.HandleFunc("/undo", PostUnapplyMoveHandler).Methods("POST")
 
 	err := http.ListenAndServe(":4242", r)
 	if err != nil {
