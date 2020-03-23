@@ -67,6 +67,10 @@ func NewMatch(aiP1 bool, aiP2 bool) *Match {
 }
 
 func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
+	err := match.CheckPlayersTurn(player)
+	if err != nil {
+		return err
+	}
 	err, toCapture := match.Board.PlaceStone(player, position, true)
 	if err != nil {
 		return err
@@ -76,6 +80,21 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
 		match.Winner = player
 	}
 	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
+	return nil
+}
+
+func (match *Match) CheckPlayersTurn(player *pl.Player) error {
+	errMsg := ""
+	if len(match.History) == 0 {
+		if player.Id != 1 {
+			errMsg = fmt.Sprintf("ERROR   (match %03d): It's not P%d's turn.\n", match.Id, player.Id)
+		}
+	} else if player.Id == match.History[len(match.History)-1].Player.Id {
+		errMsg = fmt.Sprintf("ERROR   (match %03d): It's not P%d's turn.\n", match.Id, player.Id)
+	}
+	if errMsg != "" {
+		return errors.New(errMsg)
+	}
 	return nil
 }
 
