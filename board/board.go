@@ -95,7 +95,7 @@ func (b *Board) Capture(player *pl.Player, toCapture *[]Position, countCaptures 
 }
 
 func (b *Board) CheckWinningConditions(player *pl.Player, position *Position) bool {
-	return b.MoveCreatesFive(player, position)
+	return b.MoveCreatesFive(player, position) || player.Captured >= 10
 }
 
 // Check if placing a stone creates a winning sequence of 5 or more
