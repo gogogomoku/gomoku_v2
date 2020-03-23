@@ -38,7 +38,6 @@ func NewBoard(matchId int) *Board {
 
 // Places a stone in the board
 func (b *Board) PlaceStone(player *pl.Player, position *Position, countCaptures bool) (err error, toCapture *[]Position) {
-	// fmt.Printf("MOVE    (match %03d): player %d places at %x\n", b.MatchId, player.Id, position)
 	if position.X < 0 || position.X >= SIZE || position.Y < 0 || position.Y >= SIZE {
 		errMsg := fmt.Sprintf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, position)
 		return errors.New(errMsg), nil
