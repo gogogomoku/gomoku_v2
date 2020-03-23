@@ -1,14 +1,14 @@
 <template>
-  <div class="w-full h-full flex flex-wrap p-10">
+  <div class="w-full h-full flex flex-wrap p-10 text-white-whip">
     <h1 class="flex-none min-w-full">Gomoku_v2 Match {{match.id}}</h1>
     <div class="flex-none min-w-full py-3 flex flex-wrap">
       <div class="flex flex-wrap">
-        <p class="min-w-full">p1</p>
+        <p class="min-w-full">p1 (black stones)</p>
         <p class="min-w-full">Is AI: {{ `${match.players.p1.isAi}` }}</p>
         <p class="min-w-full">Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
       </div>
       <div class="flex flex-wrap">
-        <p class="min-w-full">p2</p>
+        <p class="min-w-full">p2 (white stones)</p>
         <p class="min-w-full">Is AI: {{ `${match.players.p2.isAi}` }}</p>
         <p class="min-w-full">Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
       </div>

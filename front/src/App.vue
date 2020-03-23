@@ -1,5 +1,8 @@
 <template>
-  <div id="app" class="flex items-center justify-center w-screen h-screen antialiased">
+  <div
+    id="app"
+    class="flex items-center justify-center w-screen h-screen antialiased bg-grey-darkest"
+  >
     <Arcade
       v-if="match.matchId === -1 && message && message.Message && message.Message.length"
       :message="message.Message"
