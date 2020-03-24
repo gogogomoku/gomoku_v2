@@ -28,6 +28,11 @@ import Tile from "./Tile.vue";
 export default {
   name: "Board",
   components: { Tile },
+  mounted() {
+    const { matchId } = this.match;
+    if (!this.$route.params.id)
+      this.$router.push({ name: "match", params: { id: matchId } });
+  },
   methods: {},
   computed: {
     ...mapState(["match"])

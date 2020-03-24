@@ -1,6 +1,12 @@
 <template>
   <div class="h-full flex flex-wrap p-10 text-white-whip">
-    <h1 class="flex-none w-full">Gomoku_v2 Match {{match.matchId}}</h1>
+    <h1 class="flex-none min-w-full">
+      Gomoku_v2 Match {{match.matchId}} |
+      <span
+        @click="localClearMatch"
+        class="text-cyan hover:cursor-pointer"
+      >Home</span>
+    </h1>
     <div class="flex-none min-w-full py-3 flex flex-wrap">
       <div class="flex flex-wrap">
         <p class="min-w-full">p1 (black stones)</p>
@@ -34,7 +40,11 @@ export default {
   methods: {
     // local methods here
     undoMove() {},
-    ...mapActions(["newMatch", "undoMove"])
+    localClearMatch() {
+      this.clearMatch();
+      this.$router.push("/");
+    },
+    ...mapActions(["newMatch", "undoMove", "clearMatch"])
   },
   computed: {
     // local computed here

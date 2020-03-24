@@ -67,9 +67,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-/* .hasColumn {
-  margin-top: 10px;
-} */
-</style>
