@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full flex flex-wrap p-10 text-white-whip">
-    <h1 class="flex-none min-w-full">Gomoku_v2 Match {{match.id}}</h1>
+  <div class="h-full flex flex-wrap p-10 text-white-whip">
+    <h1 class="flex-none w-full">Gomoku_v2 Match {{match.matchId}}</h1>
     <div class="flex-none min-w-full py-3 flex flex-wrap">
       <div class="flex flex-wrap">
         <p class="min-w-full">p1 (black stones)</p>
@@ -11,6 +11,13 @@
         <p class="min-w-full">p2 (white stones)</p>
         <p class="min-w-full">Is AI: {{ `${match.players.p2.isAi}` }}</p>
         <p class="min-w-full">Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
+      </div>
+      <div class="flex flex-wrap">
+        <button
+          class="btn"
+          @click="undoMove"
+          :disabled="match.history === null || match.history.length === 0"
+        >Undo</button>
       </div>
     </div>
     <Board v-if="match && match.board && match.board.tab && match.board.tab.length" />
@@ -26,7 +33,8 @@ export default {
   components: { Board },
   methods: {
     // local methods here
-    ...mapActions(["newMatch"])
+    undoMove() {},
+    ...mapActions(["newMatch", "undoMove"])
   },
   computed: {
     // local computed here

@@ -7,9 +7,13 @@ body {
 }
 
 .btn {
-  @apply bg-cyan font-bold py-2 px-4 mt-2 font-mono rounded-sm border border-gray-500;
+  @apply bg-cyan font-bold py-2 px-4 mt-2 h-10 font-mono rounded-sm border border-gray-500 text-gray-dark-4;
 }
 
 .btn:hover {
   @apply bg-cyan-dark cursor-pointer;
+}
+
+.btn:disabled {
+  @apply bg-gray-200 cursor-auto text-gray-light-1;
 }

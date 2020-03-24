@@ -1,20 +1,19 @@
 <template>
-  <div
-    id="app"
-    class="flex items-center justify-center w-screen h-screen antialiased bg-grey-darkest"
-  >
-    <Arcade
-      v-if="match.matchId === -1 && message && message.Message && message.Message.length"
-      :message="message.Message"
-    />
+  <div id="app" class="flex justify-center w-screen h-screen antialiased">
+    <div class="flex items-center justify-center w-64 h-full">
+      <Arcade
+        v-if="match.matchId === -1 && message && message.Message && message.Message.length"
+        :message="message.Message"
+      />
 
-    <Match v-else-if="match.matchId > -1" />
-    <transition name="fade">
-      <div
-        v-if="errorResponse"
-        class="fixed bottom-0 py-3 px-4 rounded-sm mb-8 shadow-lg bg-white border-solid border-gray-400 border-1 font-mono"
-      >Error: Human-readable error message here</div>
-    </transition>
+      <Match v-else-if="match.matchId > -1" />
+      <transition name="fade">
+        <div
+          v-if="errorResponse"
+          class="fixed bottom-0 py-3 px-4 rounded-sm mb-8 shadow-lg bg-white border-solid border-gray-400 border-1 font-mono"
+        >Error: {{ errorResponse }}</div>
+      </transition>
+    </div>
   </div>
 </template>
 

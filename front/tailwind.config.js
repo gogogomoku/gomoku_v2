@@ -5,7 +5,7 @@ module.exports = {
         red: "#b96455",
         green: "#4BD9A9",
         lightgreen: "#7FFFD4",
-        somegray: "#bbb",
+        "gray-light-1": "#bbb",
         "gray-light": "#76767a", // game container border
         "gray-dark-1": "#454649", // goban container
         "gray-dark-2": "#76767a", // container border

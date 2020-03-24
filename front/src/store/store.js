@@ -83,10 +83,27 @@ export default new Vuex.Store({
       state.match.players.p2.captured = p2Captured;
       state.match.suggestion.x = X;
       state.match.suggestion.y = Y;
+    },
+    undoLastMove(state, payload) {
+      state.match.currentPlayerId = state.match.currentPlayerId ^ 0x3;
+      const {
+        board: { tab },
+        history,
+        p1: { captured: p1Captured },
+        p2: { captured: p2Captured },
+        suggestion: { X, Y }
+      } = payload;
+      state.match.board.tab = cloneDeep(tab);
+      state.match.history = cloneDeep(history);
+      state.match.players.p1.captured = p1Captured;
+      state.match.players.p2.captured = p2Captured;
+      state.match.suggestion.x = X;
+      state.match.suggestion.y = Y;
     }
   },
   actions: {
     async getHome({ state, commit }) {
+      // TODO: Error handling
       commit(
         "getHome",
         await fetch(`${state.httpEndpoint}`).then(
@@ -100,6 +117,7 @@ export default new Vuex.Store({
       );
     },
     async newMatch({ state, commit }, { p1ai, p2ai }) {
+      // TODO: Error handling
       let url = new URL(state.httpEndpoint);
       const params = { p1ai, p2ai };
       Object.keys(params).forEach(key =>
@@ -114,6 +132,7 @@ export default new Vuex.Store({
     },
     async makeMove({ state, commit }, { posX, posY }) {
       console.log(`Making move at ${[posX, posY]}`);
+      // TODO: Error handling
       commit(
         "makeMove",
         await fetch(`${state.httpEndpoint}/match/${state.match.matchId}/move`, {
@@ -127,6 +146,21 @@ export default new Vuex.Store({
           })
         }).then(results => results.json())
       );
+    },
+    async undoMove({ state, commit }) {
+      console.log(`Undoing move`);
+      // TODO: Error handling
+      if (state.match.history.length) {
+        commit(
+          "undoLastMove",
+          await new Promise((resolve, reject) => {
+            fetch(`${state.httpEndpoint}/match/${state.match.matchId}/undo`, {
+              method: "POST",
+              cache: "no-cache"
+            }).then(results => resolve(results.json()));
+          })
+        );
+      }
     }
   }
 });
