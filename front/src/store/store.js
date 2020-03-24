@@ -85,7 +85,7 @@ export default new Vuex.Store({
       state.match.suggestion.y = Y;
     },
     undoLastMove(state, payload) {
-      console.log(`payload:`, payload);
+      state.match.currentPlayerId = state.match.currentPlayerId ^ 0x3;
       const {
         board: { tab },
         history,
