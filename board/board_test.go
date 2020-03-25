@@ -20,8 +20,7 @@ func MakeBoard(playerPositions *[]Position, opponentPositions *[]Position, playe
 
 func TestBoard_CheckCaptures(t *testing.T) {
 	type fields struct {
-		Tab     [SIZE][SIZE]int8
-		MatchId int
+		Tab [SIZE][SIZE]int8
 	}
 	type args struct {
 		player   *pl.Player
@@ -37,8 +36,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 		{
 			name: "Nothing to capture (no stones)",
 			fields: fields{
-				Tab:     NewBoard(0).Tab,
-				MatchId: 1,
+				Tab: NewBoard(0).Tab,
 			},
 			args: args{
 				player: &pl.Player{
@@ -63,7 +61,6 @@ func TestBoard_CheckCaptures(t *testing.T) {
 					},
 					&[]Position{},
 					int8(1)),
-				MatchId: 1,
 			},
 			args: args{
 				player: &pl.Player{Id: 1,
@@ -88,7 +85,6 @@ func TestBoard_CheckCaptures(t *testing.T) {
 						Position{2, 0},
 					},
 					int8(1)),
-				MatchId: 1,
 			},
 			args: args{
 				player: &pl.Player{
@@ -114,7 +110,6 @@ func TestBoard_CheckCaptures(t *testing.T) {
 						Position{2, 2},
 					},
 					int8(1)),
-				MatchId: 1,
 			},
 			args: args{
 				player: &pl.Player{
@@ -133,8 +128,7 @@ func TestBoard_CheckCaptures(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Board{
-				Tab:     tt.fields.Tab,
-				MatchId: tt.fields.MatchId,
+				Tab: tt.fields.Tab,
 			}
 			gotCaptures, gotList := b.CheckCaptures(tt.args.player, tt.args.position)
 			if gotCaptures != tt.wantCaptures {

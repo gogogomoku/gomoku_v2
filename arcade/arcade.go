@@ -40,6 +40,9 @@ var CurrentMatches = Arcade{
 }
 
 func GetOpponent(player *player.Player) *player.Player {
+	if player == nil {
+		return nil
+	}
 	match := CurrentMatches.List[player.MatchId]
 	if player.Id == 1 {
 		return match.P2
