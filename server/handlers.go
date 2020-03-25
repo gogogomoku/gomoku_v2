@@ -69,7 +69,7 @@ func GetMatchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = json.NewEncoder(w).Encode(
-		match,
+		truncateHistory(match),
 	)
 }
 
@@ -111,7 +111,7 @@ func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = json.NewEncoder(w).Encode(
-		match,
+		truncateHistory(match),
 	)
 
 }
@@ -136,7 +136,15 @@ func PostUnapplyMoveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = json.NewEncoder(w).Encode(
-		match,
+		truncateHistory(match),
 	)
+}
 
+func truncateHistory(match *arcade.Match) *arcade.Match {
+	if len(match.History) > 2 {
+		toTruncate := *match
+		toTruncate.History = toTruncate.History[len(match.History)-2:]
+		return &toTruncate
+	}
+	return match
 }
