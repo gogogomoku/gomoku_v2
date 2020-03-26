@@ -11,7 +11,7 @@ body {
 }
 
 .btn:hover {
-  @apply bg-cyan-dark cursor-pointer;
+  @apply cursor-pointer;
 }
 
 .btn:disabled {

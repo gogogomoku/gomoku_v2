@@ -30,13 +30,19 @@ export default {
     Match
   },
   mounted() {
-    this.getHome();
+    const { id: routerId } = this.$route.params;
+    const cb =
+      routerId && routerId > -1
+        ? this.getMatch.bind(null, { matchId: parseInt(routerId) })
+        : this.getHome;
+    cb();
   },
   computed: {
     ...mapState(["match", "message", "errorResponse"])
   },
   methods: {
-    ...mapActions(["getHome"])
+    updateMatch() {},
+    ...mapActions(["getHome", "getMatch"])
   }
 };
 </script>
