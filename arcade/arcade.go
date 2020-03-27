@@ -18,19 +18,13 @@ type Match struct {
 	Suggestion *board.Position `json:"suggestion"`
 	Winner     *pl.Player      `json:"winner"`
 	Board      *board.Board    `json:"board"`
-	History    []*Move         `json:"history"`
+	History    []*board.Move   `json:"history"`
 }
 
 // A struct containing several simoultaneous matches
 type Arcade struct {
 	List    map[int]*Match
 	Counter int
-}
-
-type Move struct {
-	Player   *pl.Player        `json:"player"`
-	Position *board.Position   `json:"position"`
-	Captures *[]board.Position `json:"captures"`
 }
 
 // Global object containing a reference to simoultaneous matches
@@ -78,11 +72,12 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
 	if err != nil {
 		return err
 	}
-	match.History = append(match.History, &Move{player, position, toCapture})
+	move := &board.Move{player, position, toCapture}
+	match.History = append(match.History, move)
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
-	match.Suggestion = heuristic.GetSuggestion(match.Board, position, GetOpponent(player))
+	match.Suggestion = heuristic.GetSuggestion(match.Board, move, GetOpponent(player))
 	return nil
 }
 
@@ -110,19 +105,15 @@ func (match *Match) UnapplyLastMove() error {
 	lastMove := match.History[len(match.History)-1]
 	log.Printf("Unapplying move: %x\n", lastMove.Position)
 	match.History = match.History[:len(match.History)-1]
-	match.Board.Tab[lastMove.Position.Y][lastMove.Position.X] = 0
-	// If move involved captures, replace captured stones and update captured counter
-	if len(*lastMove.Captures) > 0 {
-		for _, piece := range *lastMove.Captures {
-			match.Board.Tab[piece.Y][piece.X] = GetOpponent(lastMove.Player).Id
-		}
-		lastMove.Player.Captured -= int8(len(*lastMove.Captures))
+	err := match.Board.RemoveStone(lastMove.Player, lastMove)
+	if err != nil {
+		return err
 	}
 	// Recalculate suggestion for player
 	if len(match.History) == 0 {
 		match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
 	} else {
-		match.Suggestion = heuristic.GetSuggestion(match.Board, lastMove.Position, lastMove.Player)
+		match.Suggestion = heuristic.GetSuggestion(match.Board, lastMove, lastMove.Player)
 	}
 	return nil
 }

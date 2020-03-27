@@ -31,6 +31,12 @@ type Position struct {
 	Y int8
 }
 
+type Move struct {
+	Player   *pl.Player  `json:"player"`
+	Position *Position   `json:"position"`
+	Captures *[]Position `json:"captures"`
+}
+
 func NewBoard(matchId int) *Board {
 	b := Board{MatchId: matchId}
 	return &b
@@ -52,6 +58,26 @@ func (b *Board) PlaceStone(player *pl.Player, position *Position, countCaptures 
 		b.Capture(player, toCapture, countCaptures)
 	}
 	return nil, toCapture
+}
+
+func (b *Board) RemoveStone(player *pl.Player, move *Move) error {
+	if move.Position.X < 0 || move.Position.X >= SIZE || move.Position.Y < 0 || move.Position.Y >= SIZE {
+		errMsg := fmt.Sprintf("ERROR   (match %03d): Position out of board. %x\n", b.MatchId, move.Position)
+		return errors.New(errMsg)
+	}
+	if b.Tab[move.Position.Y][move.Position.X] == 0 {
+		errMsg := fmt.Sprintf("ERROR   (match %03d): Position is already empty. %x\n", b.MatchId, move.Position)
+		return errors.New(errMsg)
+	}
+	b.Tab[move.Position.Y][move.Position.X] = 0
+	// If move involved captures, replace captured stones and update captured counter
+	if len(*move.Captures) > 0 {
+		for _, piece := range *move.Captures {
+			b.Tab[piece.Y][piece.X] = move.Player.OpponentId
+		}
+		move.Player.Captured -= int8(len(*move.Captures))
+	}
+	return nil
 }
 
 // Check if by placing a stone, playerId can capture
