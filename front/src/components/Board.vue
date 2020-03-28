@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-w-full w-auto p-5"
+    class="p-5 text-center m-auto"
     v-if="match && match.board && match.board.tab && match.board.tab.length"
   >
     <div

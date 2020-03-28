@@ -1,22 +1,19 @@
 <template>
-  <div class="h-full flex flex-wrap p-10 text-white-whip">
-    <h1 class="flex-none min-w-full">
+  <div class="h-full w-56-rem self-center flex flex-col p-10 text-white-whip">
+    <h1 class="cursor-pointer" @click="localClearMatch">
       Gomoku_v2 Match {{match.matchId}} |
-      <span
-        @click="localClearMatch"
-        class="text-cyan hover:cursor-pointer"
-      >Home</span>
+      <span class="text-cyan">Home</span>
     </h1>
-    <div class="flex-none min-w-full py-3 flex flex-wrap">
-      <div class="flex flex-wrap">
-        <p class="min-w-full">p1 (black stones)</p>
-        <p class="min-w-full">Is AI: {{ `${match.players.p1.isAi}` }}</p>
-        <p class="min-w-full">Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
+    <div class="py-3 flex justify-end mb-4">
+      <div class="flex flex-col mr-10">
+        <p>p1 (black stones)</p>
+        <p>Is AI: {{ `${match.players.p1.isAi}` }}</p>
+        <p>Captured stones: {{ parseInt(match.players.p1.captured) }}</p>
       </div>
-      <div class="flex flex-wrap">
-        <p class="min-w-full">p2 (white stones)</p>
-        <p class="min-w-full">Is AI: {{ `${match.players.p2.isAi}` }}</p>
-        <p class="min-w-full">Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
+      <div class="flex flex-col mr-10">
+        <p>p2 (white stones)</p>
+        <p>Is AI: {{ `${match.players.p2.isAi}` }}</p>
+        <p>Captured stones: {{ parseInt(match.players.p2.captured) }}</p>
       </div>
       <div class="flex flex-wrap">
         <button
@@ -32,7 +29,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import Board from "./Board.vue";
+import Board from "../components/Board.vue";
 
 export default {
   name: "Match",
