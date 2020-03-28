@@ -1,4 +1,4 @@
-package heuristic
+package ai
 
 import (
 	"log"

@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gogogomoku/gomoku_v2/ai"
 	"github.com/gogogomoku/gomoku_v2/arcade"
+	"github.com/gogogomoku/gomoku_v2/arcade/match"
 	"github.com/gogogomoku/gomoku_v2/board"
 	"github.com/gogogomoku/gomoku_v2/player"
 	"github.com/gorilla/mux"
@@ -109,6 +111,7 @@ func PostMoveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
+	match.Suggestion = ai.GetSuggestion(match.Board, match.History[len(match.History)-1], match.GetOpponent(player))
 
 	_ = json.NewEncoder(w).Encode(
 		truncateHistory(match),
@@ -134,13 +137,20 @@ func PostUnapplyMoveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
+	// Recalculate suggestion for player
+	if len(match.History) == 0 {
+		match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
+	} else {
+		lastMove := match.History[len(match.History)-1]
+		match.Suggestion = ai.GetSuggestion(match.Board, lastMove, lastMove.Player)
+	}
 
 	_ = json.NewEncoder(w).Encode(
 		truncateHistory(match),
 	)
 }
 
-func truncateHistory(match *arcade.Match) *arcade.Match {
+func truncateHistory(match *match.Match) *match.Match {
 	if len(match.History) > 2 {
 		toTruncate := *match
 		toTruncate.History = toTruncate.History[len(match.History)-2:]
