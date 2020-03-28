@@ -5,7 +5,6 @@ import (
 
 	"github.com/gogogomoku/gomoku_v2/arcade/match"
 	"github.com/gogogomoku/gomoku_v2/board"
-	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
 // A struct containing several simoultaneous matches
@@ -24,18 +23,11 @@ var CurrentMatches = Arcade{
 func NewMatch(aiP1 bool, aiP2 bool) *match.Match {
 	CurrentMatches.Counter++
 	matchId := CurrentMatches.Counter
-	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1, MatchId: matchId}
-	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2, MatchId: matchId}
-	match := match.Match{
-		Board: board.NewBoard(matchId),
-		Id:    matchId,
-		P1:    &p1,
-		P2:    &p2,
-	}
-	CurrentMatches.List[matchId] = &match
-	match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
+	newMatch := match.CreateMatch(aiP1, aiP2, matchId)
+	CurrentMatches.List[matchId] = newMatch
+	newMatch.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
 	fmt.Println("New match started:", matchId)
-	return &match
+	return newMatch
 }
 
 func PrintState(match *match.Match) {

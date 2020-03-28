@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/gogogomoku/gomoku_v2/board"
-	"github.com/gogogomoku/gomoku_v2/heuristic"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
@@ -45,7 +44,6 @@ func (match *Match) AddMove(player *pl.Player, position *board.Position) error {
 	if match.Board.CheckWinningConditions(player, position) {
 		match.Winner = player
 	}
-	match.Suggestion = heuristic.GetSuggestion(match.Board, move, match.GetOpponent(player))
 	return nil
 }
 
@@ -77,11 +75,17 @@ func (match *Match) UnapplyLastMove() error {
 	if err != nil {
 		return err
 	}
-	// Recalculate suggestion for player
-	if len(match.History) == 0 {
-		match.Suggestion = &board.Position{X: board.SIZE / 2, Y: board.SIZE / 2}
-	} else {
-		match.Suggestion = heuristic.GetSuggestion(match.Board, lastMove, lastMove.Player)
-	}
 	return nil
+}
+
+func CreateMatch(aiP1 bool, aiP2 bool, matchId int) *Match {
+	p1 := pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: aiP1, MatchId: matchId}
+	p2 := pl.Player{Id: 2, OpponentId: 1, Captured: 0, IsAi: aiP2, MatchId: matchId}
+	match := Match{
+		Board: board.NewBoard(matchId),
+		Id:    matchId,
+		P1:    &p1,
+		P2:    &p2,
+	}
+	return &match
 }
