@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/gogogomoku/gomoku_v2/arcade/match"
 	"github.com/gogogomoku/gomoku_v2/board"
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
@@ -21,7 +22,7 @@ func MakeBoard(playerPositions *[]board.Position, opponentPositions *[]board.Pos
 
 func TestArcade_GetOpponent(t *testing.T) {
 	type fields struct {
-		Match *Match
+		Match *match.Match
 	}
 	type args struct {
 		player *pl.Player
@@ -65,9 +66,9 @@ func TestArcade_GetOpponent(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		gotPlayer := GetOpponent(tt.args.player)
+		gotPlayer := tt.fields.Match.GetOpponent(tt.args.player)
 		t.Run(tt.name, func(t *testing.T) {
-			if GetOpponent(tt.args.player) != tt.wantPlayer {
+			if tt.fields.Match.GetOpponent(tt.args.player) != tt.wantPlayer {
 				t.Errorf("Arcade.GetOpponent() got Player = %v, want %v", gotPlayer, tt.wantPlayer)
 			}
 		})
@@ -82,7 +83,7 @@ func TestArcade_NewMatch(t *testing.T) {
 	tests := []struct {
 		name      string
 		args      args
-		wantMatch *Match
+		wantMatch *match.Match
 	}{
 		{
 			name: "New match no AI",
@@ -90,7 +91,7 @@ func TestArcade_NewMatch(t *testing.T) {
 				aiP1: false,
 				aiP2: false,
 			},
-			wantMatch: &Match{
+			wantMatch: &match.Match{
 				Board: board.NewBoard(CurrentMatches.Counter + 1),
 				Id:    CurrentMatches.Counter + 1,
 				P1:    &pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: false, MatchId: CurrentMatches.Counter + 1},
@@ -103,7 +104,7 @@ func TestArcade_NewMatch(t *testing.T) {
 				aiP1: true,
 				aiP2: true,
 			},
-			wantMatch: &Match{
+			wantMatch: &match.Match{
 				Board: board.NewBoard(CurrentMatches.Counter + 2),
 				Id:    CurrentMatches.Counter + 2,
 				P1:    &pl.Player{Id: 1, OpponentId: 2, Captured: 0, IsAi: true, MatchId: CurrentMatches.Counter + 2},

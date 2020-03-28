@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gogogomoku/gomoku_v2/arcade"
+	"github.com/gogogomoku/gomoku_v2/arcade/match"
 	"github.com/gogogomoku/gomoku_v2/board"
 	"github.com/gogogomoku/gomoku_v2/player"
 	"github.com/gorilla/mux"
@@ -140,7 +141,7 @@ func PostUnapplyMoveHandler(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func truncateHistory(match *arcade.Match) *arcade.Match {
+func truncateHistory(match *match.Match) *match.Match {
 	if len(match.History) > 2 {
 		toTruncate := *match
 		toTruncate.History = toTruncate.History[len(match.History)-2:]
