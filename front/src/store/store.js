@@ -10,6 +10,8 @@ const initialState = {
   errorResponse: "",
   httpEndpoint: process.env.VUE_APP_SERVER_HTTP || "http://localhost:4242",
   match: {
+    matchPending: undefined, // bool
+    pendingPosition: null, // { x: int, y: int }
     matchId: -1,
     currentPlayerId: -1,
     suggestionTimer: 0,
@@ -67,7 +69,7 @@ export default new Vuex.Store({
           : history.map(h => h.player.id)[history.length - 1];
       state.errorResponse = "";
       state.match.matchId = id;
-      state.match.currentPlayerId = lastPlayer ? lastPlayer ^ 0x3 : 1;
+      state.match.currentPlayerId = !lastPlayer ? 1 : lastPlayer ^ 0x3;
       state.match.board.tab = cloneDeep(tab);
       state.match.size = tab.length;
       state.match.players.p1.isAi = p1.isAi;
@@ -139,10 +141,17 @@ export default new Vuex.Store({
     clearMatch(state) {
       Object.assign(state, cloneDeep(initialState));
       state.message = { Message: "You have navigated back to Gomoku_v2 home!" };
+    },
+    setMatchPending(state, { matchIsPending }) {
+      state.match.matchPending = matchIsPending;
+    },
+    setmoveIsPending(state, { moveIsPending, posX, posY }) {
+      state.match.pendingPosition = moveIsPending ? { x: posX, y: posY } : null;
     }
   },
   actions: {
     getMatch({ state, commit }, { matchId }) {
+      commit("setMatchPending", { matchIsPending: true });
       axios
         .get(`${state.httpEndpoint}/match/${matchId}`)
         .then(response => {
@@ -152,12 +161,16 @@ export default new Vuex.Store({
         .catch(err => {
           console.info("Error in getMatch(): ", err);
           commit("setError", `Could not get match ${parseInt(matchId)}`);
+        })
+        .finally(() => {
+          commit("setMatchPending", { matchIsPending: false });
         });
     },
     clearMatch({ commit }) {
       commit("clearMatch");
     },
     getHome({ state, commit }) {
+      commit("setMatchPending", { matchIsPending: true });
       return fetch(`${state.httpEndpoint}`)
         .then(response => response.json())
         .catch(err => {
@@ -170,10 +183,14 @@ export default new Vuex.Store({
         .catch(err => {
           console.info(`Error in getHome(): `, err);
           commit("setError", `Could not connect to server.`);
+        })
+        .finally(() => {
+          commit("setMatchPending", { matchIsPending: false });
         });
     },
     newMatch({ state, commit }, { p1ai, p2ai }) {
       // TODO: Error handling
+      commit("setMatchPending", { matchIsPending: true });
       let url = new URL(`${state.httpEndpoint}/match/new`);
       const params = { p1ai, p2ai };
       Object.keys(params).forEach(key =>
@@ -190,9 +207,13 @@ export default new Vuex.Store({
         .catch(err => {
           console.info("Error in newMatch(): ", err);
           commit("setError", "Could not create a new match.");
+        })
+        .finally(() => {
+          commit("setMatchPending", { matchIsPending: false });
         });
     },
     makeMove({ state, commit }, { posX, posY }) {
+      commit("setmoveIsPending", { moveIsPending: true, posX, posY });
       console.info(`Making move at ${[posX, posY]}`);
       const url = new URL(
         `${state.httpEndpoint}/match/${state.match.matchId}/move`
@@ -217,6 +238,9 @@ export default new Vuex.Store({
             "setError",
             `Could not make move for player ${state.match.currentPlayerId} at position x: ${posX}, y: ${posY}.`
           );
+        })
+        .finally(() => {
+          commit("setmoveIsPending", { moveIsPending: false, posX, posY });
         });
     },
     async undoMove({ state, commit }) {
