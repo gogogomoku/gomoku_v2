@@ -3,3 +3,7 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.w-56-rem {
+  width: 56rem;
+}

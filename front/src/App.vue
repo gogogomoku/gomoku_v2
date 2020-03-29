@@ -1,25 +1,30 @@
 <template>
-  <div id="app" class="flex justify-center w-screen h-screen antialiased">
-    <div class="flex items-center justify-center w-64 h-full">
-      <Arcade
-        v-if="match.matchId === -1 && message && message.Message && message.Message.length"
-        :message="message.Message"
-      />
-
-      <Match v-else-if="match.matchId > -1" />
-      <transition name="fade">
-        <div
-          v-if="errorResponse"
-          class="fixed bottom-0 py-3 px-4 rounded-sm mb-8 shadow-lg bg-white border-solid border-gray-400 border-1 font-mono"
-        >Error: {{ errorResponse }}</div>
-      </transition>
+  <div id="app" class="flex flex-col align-center justify-center w-full antialiased">
+    <Match v-if="match.matchId > -1" />
+    <Arcade v-else />
+    <transition name="fade">
+      <div
+        v-if="errorResponse"
+        class="fixed bottom-0 py-3 px-4 rounded-sm mb-8 shadow-lg bg-white border-solid border-gray-400 border-1 font-mono"
+      >Error: {{ errorResponse }}</div>
+    </transition>
+    <div class="w-full flex -mt-12 py-3 px-4 text-white">
+      <div class="flex">
+        <img class="mr-2" src="./assets/github-logo.svg" width="15" height="15" />
+      </div>
+      <div>
+        <a
+          class="text-murky-yellow-gray no-underline align-baseline"
+          href="https://github.com/gogogomoku/gomoku_v2"
+        >@eskombro + @ekelen</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Arcade from "./components/Arcade.vue";
-import Match from "./components/Match.vue";
+import Arcade from "./pages/Arcade.vue";
+import Match from "./pages/Match.vue";
 import { mapActions, mapState } from "vuex";
 import "./assets/styles.css"; // Global styles implementing tailwind
 
@@ -38,7 +43,7 @@ export default {
     cb();
   },
   computed: {
-    ...mapState(["match", "message", "errorResponse"])
+    ...mapState(["match", "errorResponse"])
   },
   methods: {
     updateMatch() {},
