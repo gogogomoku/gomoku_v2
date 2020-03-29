@@ -14,7 +14,7 @@ func GetSuggestion(b *board.Board, lastMove *board.Move, nextPlayer *player.Play
 	moveCopy := board.Move{Player: &lastPlayerCopy, Position: lastMove.Position, Captures: lastMove.Captures}
 	state := &tree.Node{CurrentBoard: boardCopy, CurrentMove: &moveCopy, CurrentPlayer: &nextPlayerCopy, Children: &[]*tree.Node{}, Score: 0, BestChild: nil}
 
-	depth := int8(4)
+	depth := int8(3)
 	tree.ProjectPossibleMoves(state, depth)
 	minimax.LaunchMinimax(state, depth)
 	bestPosition := state.BestChild.CurrentMove.Position

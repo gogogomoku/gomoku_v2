@@ -17,11 +17,11 @@ type Node struct {
 }
 
 func GetPossibleMoves(b *board.Board, lastMove *board.Position, player *player.Player) *[]*board.Move {
-	curY := lastMove.Y - 1
+	curY := lastMove.Y - 8
 	possibleMoves := []*board.Move{}
-	for curY <= lastMove.Y+1 {
-		curX := lastMove.X - 1
-		for curX <= lastMove.X+1 {
+	for curY <= lastMove.Y+8 {
+		curX := lastMove.X - 8
+		for curX <= lastMove.X+8 {
 			position := board.Position{X: curX, Y: curY}
 			if b.GetPositionValue(position) == 0 {
 				_, captures := b.CheckCaptures(player, &position)

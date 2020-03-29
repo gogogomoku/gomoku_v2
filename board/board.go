@@ -8,7 +8,7 @@ import (
 )
 
 // Needs to be bigger than 3 to allow captures
-const SIZE = 19
+const SIZE = 6
 
 const (
 	NW = iota
