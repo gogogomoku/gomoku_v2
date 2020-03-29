@@ -116,7 +116,7 @@ func (b *Board) Capture(player *pl.Player, toCapture *[]Position, countCaptures 
 	}
 	for _, position := range *toCapture {
 		b.Tab[position.Y][position.X] = 0
-		fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.MatchId, player.Id, position)
+		// fmt.Printf("CAPTURE (%03d): player %d captures %x\n", b.MatchId, player.Id, position)
 	}
 }
 
