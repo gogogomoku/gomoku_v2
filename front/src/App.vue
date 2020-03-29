@@ -8,7 +8,7 @@
         class="fixed bottom-0 py-3 px-4 rounded-sm mb-8 shadow-lg bg-white border-solid border-gray-400 border-1 font-mono"
       >Error: {{ errorResponse }}</div>
     </transition>
-    <div class="w-full flex -mt-12 py-3 px-4 text-white">
+    <div class="w-full flex justify-end -mt-12 py-3 px-4 text-white mb-4">
       <div class="flex">
         <img class="mr-2" src="./assets/github-logo.svg" width="15" height="15" />
       </div>
