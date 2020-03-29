@@ -146,10 +146,7 @@ export default new Vuex.Store({
       axios
         .get(`${state.httpEndpoint}/match/${matchId}`)
         .then(response => {
-          const { data, status } = response;
-          if (status !== 200) {
-            throw new Error(`Error ${status}`);
-          }
+          const { data } = response;
           commit("getMatch", data);
         })
         .catch(err => {
