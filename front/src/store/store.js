@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import { cloneDeep } from "lodash";
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -62,11 +63,11 @@ export default new Vuex.Store({
       } = payload;
       const lastPlayer =
         !history || history.length === 0
-          ? 1
+          ? null
           : history.map(h => h.player.id)[history.length - 1];
       state.errorResponse = "";
       state.match.matchId = id;
-      state.match.currentPlayerId = lastPlayer ^ 0x3;
+      state.match.currentPlayerId = lastPlayer ? lastPlayer ^ 0x3 : 1;
       state.match.board.tab = cloneDeep(tab);
       state.match.size = tab.length;
       state.match.players.p1.isAi = p1.isAi;
@@ -142,17 +143,15 @@ export default new Vuex.Store({
   },
   actions: {
     getMatch({ state, commit }, { matchId }) {
-      return fetch(`${state.httpEndpoint}/match/${matchId}`)
-        .then(response => response.json())
-        .catch(err => {
-          throw new Error(err);
-        })
-        .then(data => {
+      axios
+        .get(`${state.httpEndpoint}/match/${matchId}`)
+        .then(response => {
+          const { data } = response;
           commit("getMatch", data);
         })
         .catch(err => {
           console.info("Error in getMatch(): ", err);
-          commit("setError", `Error getting match ${parseInt(matchId)}`);
+          commit("setError", `Could not get match ${parseInt(matchId)}`);
         });
     },
     clearMatch({ commit }) {
