@@ -1,8 +1,8 @@
 <template>
   <div
-    class="btn rounded-center flex-none flex flex-wrap justify-center items-center resize-none m-0 p-0 h-10 w-10 border-solid border-1 border-grey-darkest content-center"
-    :class="[isSuggestion ? 'bg-cyan-dark' : 'bg-gray-dark-4']"
-    @click="sendMove({ posX, posY })"
+    class="flex-none flex flex-wrap justify-center items-center resize-none m-0 p-0 h-10 w-10 border-solid border-grey-darkest border rounded-sm content-center"
+    :class="[{'cursor-pointer': !anyMoveIsPending && value === 0}, {'opacity-75 cursor-default': anyMoveIsPending}, isSuggestion && !anyMoveIsPending ? 'bg-cyan-dark' : 'bg-gray-dark-4']"
+    @click="() => (!anyMoveIsPending && value === 0) && sendMove({ posX, posY })"
     @mouseover="mouseOver"
     @mouseleave="mouseOut"
   >
@@ -20,7 +20,12 @@ export default {
     value: Number,
     posX: Number,
     posY: Number,
-    isSuggestion: Boolean
+    isSuggestion: Boolean,
+    anyMoveIsPending: {
+      type: Boolean,
+      default: false
+    },
+    isPendingPosition: Boolean
   },
   data() {
     return {
@@ -44,10 +49,21 @@ export default {
         : "";
     },
     stoneOpacity() {
-      const { value, hovering, isSuggestion } = this;
-      return !hovering && value === 0 && !isSuggestion
+      const {
+        value,
+        hovering,
+        isSuggestion,
+        anyMoveIsPending,
+        isPendingPosition
+      } = this;
+      return value === 0 &&
+        !isPendingPosition &&
+        ((anyMoveIsPending && !isPendingPosition) ||
+          (!hovering && !isSuggestion))
         ? "opacity-0"
-        : (!hovering && value > 0) || (hovering && isSuggestion)
+        : isPendingPosition ||
+          value > 0 ||
+          (!anyMoveIsPending && hovering && isSuggestion)
         ? "opacity-100"
         : "opacity-50";
     },
@@ -60,8 +76,8 @@ export default {
     mouseOut() {
       this.hovering = false;
     },
-    async sendMove({ posX, posY }) {
-      await this.makeMove({ posX, posY });
+    sendMove({ posX, posY }) {
+      this.makeMove({ posX, posY });
     },
     ...mapActions(["makeMove"])
   }

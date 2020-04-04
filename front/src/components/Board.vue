@@ -16,6 +16,8 @@
         :posX="posX"
         :posY="posY"
         :isSuggestion="posY === match.suggestion.y && posX === match.suggestion.x"
+        :anyMoveIsPending="!!match.pendingPosition"
+        :isPendingPosition="!!match.pendingPosition && posY === match.pendingPosition.y && posX === match.pendingPosition.x"
       />
     </div>
   </div>

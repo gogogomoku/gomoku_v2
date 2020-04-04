@@ -19,7 +19,7 @@
         <button
           class="btn"
           @click="undoMove"
-          :disabled="match.history === null || match.history.length === 0"
+          :disabled="match.moveIsPending || match.history === null || match.history.length === 0"
         >Undo</button>
       </div>
     </div>
