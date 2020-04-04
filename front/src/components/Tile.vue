@@ -57,6 +57,7 @@ export default {
         isPendingPosition
       } = this;
       return value === 0 &&
+        !isPendingPosition &&
         ((anyMoveIsPending && !isPendingPosition) ||
           (!hovering && !isSuggestion))
         ? "opacity-0"
