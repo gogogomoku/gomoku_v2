@@ -9,9 +9,11 @@ import (
 	pl "github.com/gogogomoku/gomoku_v2/player"
 )
 
+type EvaluateBoardFn func(b *board.Board, move *board.Position, player *pl.Player, fallback int) int
+
 func LaunchMinimax(root *tree.Node, depth int8) {
 	fmt.Printf("Minimax with Depth %d\n", depth)
-	value := minimax(root, depth, int(math.MinInt32), int(math.MaxInt32), true)
+	value := minimax(root, depth, int(math.MinInt32), int(math.MaxInt32), true, EvaluateBoard)
 	fmt.Printf("Final value %d\n", value)
 	for _, ch1 := range *root.Children {
 		fmt.Println("****------****")
@@ -24,11 +26,11 @@ func LaunchMinimax(root *tree.Node, depth int8) {
 	}
 }
 
-func minimax(node *tree.Node, depth int8, alpha int, beta int, maximize bool) int {
+func minimax(node *tree.Node, depth int8, alpha int, beta int, maximize bool, evalFn EvaluateBoardFn) int {
 	// // TODO: Add if state is a win to this condition
 	// PrintState(node.CurrentBoard)
 	if depth == 0 || len(*node.Children) == 0 {
-		node.Score = EvaluateBoard(node.CurrentBoard, node.CurrentMove.Position, node.CurrentMove.Player)
+		node.Score = evalFn(node.CurrentBoard, node.CurrentMove.Position, node.CurrentMove.Player, node.Score)
 		return node.Score
 	}
 
@@ -36,7 +38,7 @@ func minimax(node *tree.Node, depth int8, alpha int, beta int, maximize bool) in
 		maxEval := int(math.MinInt32)
 		for _, child := range *node.Children {
 			child.CurrentBoard.PlaceStone(child.CurrentMove.Player, child.CurrentMove.Position, true)
-			eval := minimax(child, depth-1, alpha, beta, false)
+			eval := minimax(child, depth-1, alpha, beta, false, evalFn)
 			child.CurrentBoard.RemoveStone(child.CurrentMove.Player, child.CurrentMove)
 			maxEval = maximum(maxEval, eval)
 			alpha = maximum(alpha, eval)
@@ -54,7 +56,7 @@ func minimax(node *tree.Node, depth int8, alpha int, beta int, maximize bool) in
 		minEval := int(math.MaxInt32)
 		for _, child := range *node.Children {
 			child.CurrentBoard.PlaceStone(child.CurrentMove.Player, child.CurrentMove.Position, true)
-			eval := minimax(child, depth-1, alpha, beta, true)
+			eval := minimax(child, depth-1, alpha, beta, true, evalFn)
 			child.CurrentBoard.RemoveStone(child.CurrentMove.Player, child.CurrentMove)
 			minEval = minimum(minEval, eval)
 			beta = minimum(beta, eval)
@@ -86,10 +88,12 @@ func maximum(a, b int) int {
 	return b
 }
 
-func EvaluateBoard(b *board.Board, move *board.Position, player *pl.Player) int {
+func EvaluateBoard(b *board.Board, move *board.Position, player *pl.Player, fallback int) int {
+	_ = fallback
 	sequences := [][board.SIZE]int8{}
 	// Add horizontal sequences
 	for _, line := range b.Tab {
+
 		sequences = append(sequences, line)
 	}
 	// Add vertical sequences
